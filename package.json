@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf build && mkdir build",
-    "build-babel": "babel -d ./build ./dist -s",
+    "build-babel": "babel -d ./build server.js -s",
     "build": "npm run clean && npm run build-babel",
     "start": "npm run build && nodemon ./build/server.js"
   },
