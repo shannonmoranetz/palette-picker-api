@@ -24,6 +24,24 @@ app.get('/api/v1/palettes', async (req, res) => {
   }
 });
 
+// One project
+app.get('api/v1/projects/:id', async (req, res) => {
+    try {
+        res.status(200).json('Hello 1 project');
+    } catch (error) {
+        res.status(500).json({ error })
+    }
+});
+
+// One palette
+app.get('api/v1/palettes/:id', async (req, res) => {
+    try {
+        res.status(200).json('Hello 1 palette');
+    } catch (error) {
+        res.status(500).json({ error })
+    }
+});
+
 app.listen(app.get('port'), () => {
   console.log(`Server running on port: ${app.get('port')}`);
 });
