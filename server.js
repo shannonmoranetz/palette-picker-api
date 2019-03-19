@@ -11,38 +11,37 @@ app.set('port', process.env.PORT || 3001);
 // All projects
 app.get('/api/v1/projects', async (req, res) => {
   try {
-    res.status(200).json('Hello Projects');
+    let projects = await database('projects').select();
+    res.status(200).json(projects);
   } catch (error) {
     res.status(500).json({ error });
   } 
 });
 
-// All palettes
-app.get('/api/v1/palettes', async (req, res) => {
-  try {
-    res.status(200).json('Hello Palettes');
-  } catch (error) {
-    res.status(500).json({ error });
-  }
-});
-
-// One project
-app.get('api/v1/projects/:id', async (req, res) => {
+// All palettes for one project
+app.get('api/v1/projects/:id/palettes', async (req, res) => {
     try {
-        res.status(200).json('Hello 1 project');
+      const allPalettes = await database('palettes').select();
+      const selectedProject = await database('projects').where('id', parseInt(request.params.id));
+      let palettesToReturn = await allPalettes.filter((palette) => {
+        return selectedProject.id === palette.project_id
+      });
+      res.status(200).json(palettesToReturn);
     } catch (error) {
-        res.status(500).json({ error })
+        res.status(500).json({ error });
     }
 });
 
 // One palette
 app.get('api/v1/palettes/:id', async (req, res) => {
-    try {
-        res.status(200).json('Hello 1 palette');
-    } catch (error) {
-        res.status(500).json({ error })
-    }
+  try {
+    res.status(200).json('Hello 1 palette');
+  } catch (error) {
+    res.status(500).json({ error })
+  }
 });
+
+// Dynamic query 
 
 app.listen(app.get('port'), () => {
   console.log(`Server running on port: ${app.get('port')}`);
