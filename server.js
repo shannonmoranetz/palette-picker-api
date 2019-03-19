@@ -21,12 +21,22 @@ app.get('/api/v1/projects', async (req, res) => {
 // All palettes for one project
 app.get('/api/v1/projects/:id/palettes', async (req, res) => {
     try {
-      const projectId = req.params.id
-      const palettesForProject = await database('palettes').where('project_id', projectId);
-      // **Query (conditional logic to further narrow down palettesForProject)
+      const projectId = req.params.id;
+      const hexQuery = req.query.hex
+      let palettesForProject = await database('palettes').where('project_id', projectId);
+
+      if (hexQuery) {
+        const queriedPalettes = await palettesForProject.filter((palette) => {
+          return palette.color1 === hexQuery
+        })
+        console.log(queriedPalettes)
+        palettesForProject = queriedPalettes;
+      }
+      
+
       res.status(200).json({ palettes: palettesForProject });
     } catch (error) {
-        res.status(500).json({ error });
+      res.status(500).json({ error });
     }
 });
 
@@ -35,11 +45,11 @@ app.get('/api/v1/projects/:id', async (req, res) => {
   try {
     const projectId = req.params.id
     const selectedProject = await database('projects').where('id', projectId)
-    // if (selectedProject.length) {
+    if (selectedProject.length) {
       res.status(200).json({ project: selectedProject });
-    // } else {
-    //   res.status(404).json({ error: `No project found with the id of ${projectId}.` })
-    // }
+    } else {
+      res.status(404).json({ error: `No project found with the id of ${projectId}.` })
+    }
   } catch (error) {
     res.status(500).json({ error })
   }
@@ -50,7 +60,11 @@ app.get('/api/v1/palettes/:id', async (req, res) => {
   try {
     const paletteId = req.params.id
     const selectedPalette = await database('palettes').where('id', paletteId)
-    res.status(200).json({ palette: selectedPalette });
+    if (selectedPalette.length) {
+      res.status(200).json({ palette: selectedPalette });
+    } else {
+      res.status(404).json({ error: `No palette found with the id of ${paletteId}.` })
+    }
   } catch (error) {
     res.status(500).json({ error })
   }
