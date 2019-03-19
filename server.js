@@ -28,14 +28,15 @@ app.get('/api/v1/projects/:id/palettes', async (req, res) => {
       palettesForProject = await palettesForProject.filter((palette) => {
         const { color1, color2, color3, color4, color5 } = palette;
         const colors = [color1, color2, color3, color4, color5];
-        colors.some(color => color === hexQuery);
+        return colors.some(color => color === hexQuery);
       })
-      if (palettesForProject.length) {
-        res.status(200).json({ palettes: palettesForProject });
-      } else {
-        res.status(404).json({ error: `No palettes found for project with the id of ${projectId}.` })
-      }
-      // res.status(404).json({ error: `No hex code found with the value of ${hexQuery}.` });
+    }
+    if (palettesForProject.length) {
+      res.status(200).json({ palettes: palettesForProject });
+    } else if (hexQuery) {
+      res.status(404).json({ error: `No palettes found for hex code with the value of ${hexQuery}.` });
+    } else {
+      res.status(404).json({ error: `No palettes found for project with the id of ${projectId}.`})
     }
   } catch (error) {
     res.status(500).json({ error });
