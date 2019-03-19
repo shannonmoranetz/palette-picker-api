@@ -15,29 +15,31 @@ app.get('/api/v1/projects', async (req, res) => {
     res.status(200).json(projects);
   } catch (error) {
     res.status(500).json({ error });
-  } 
+  }
 });
 
 // All palettes for one project
 app.get('/api/v1/projects/:id/palettes', async (req, res) => {
-    try {
-      const projectId = req.params.id;
-      const hexQuery = req.query.hex
-      let palettesForProject = await database('palettes').where('project_id', projectId);
-
-      if (hexQuery) {
-        const queriedPalettes = await palettesForProject.filter((palette) => {
-          return palette.color1 === hexQuery
-        })
-        console.log(queriedPalettes)
-        palettesForProject = queriedPalettes;
+  try {
+    const projectId = req.params.id;
+    const hexQuery = req.query.hex;
+    let palettesForProject = await database('palettes').where('project_id', projectId);
+    if (hexQuery) {
+      palettesForProject = await palettesForProject.filter((palette) => {
+        const { color1, color2, color3, color4, color5 } = palette;
+        const colors = [color1, color2, color3, color4, color5];
+        colors.some(color => color === hexQuery);
+      })
+      if (palettesForProject.length) {
+        res.status(200).json({ palettes: palettesForProject });
+      } else {
+        res.status(404).json({ error: `No palettes found for project with the id of ${projectId}.` })
       }
-      
-
-      res.status(200).json({ palettes: palettesForProject });
-    } catch (error) {
-      res.status(500).json({ error });
+      // res.status(404).json({ error: `No hex code found with the value of ${hexQuery}.` });
     }
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 });
 
 // One project
