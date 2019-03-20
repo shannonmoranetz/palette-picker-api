@@ -15,7 +15,7 @@ app.get('/', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error });
   }
-})
+});
 
 // All projects
 app.get('/api/v1/projects', async (req, res) => {
