@@ -1,13 +1,22 @@
 import '@babel/polyfill';
 import express from 'express';
 const environment = process.env.NODE_ENV || 'development';
-const configuration = require('../knexfile')[environment];
+const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 const app = express();
 app.use(express.json());
 app.set('port', process.env.PORT || 3001);
 
 // GET:
+// Root
+app.get('/', async (req, res) => {
+  try {
+    res.send('Sucessful request completed to Palette Picker API.');
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+})
+
 // All projects
 app.get('/api/v1/projects', async (req, res) => {
   try {
@@ -76,3 +85,5 @@ app.get('/api/v1/palettes/:id', async (req, res) => {
 app.listen(app.get('port'), () => {
   console.log(`Server running on port: ${app.get('port')}`);
 });
+
+module.exports = app;
