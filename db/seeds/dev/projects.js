@@ -1,5 +1,4 @@
 const projectsData = require('../../data/example-projects');
-const palettesData = require('../../data/example-palettes');
 
 exports.seed = function(knex, Promise) {
   return knex('palettes').del()
@@ -11,20 +10,23 @@ exports.seed = function(knex, Promise) {
       })
       return Promise.all(projectPromises)
     })
-    .then(() => {
-      let palettePromises = [];
-      palettesData.forEach(palette => {
-        palettePromises.push(createPalette(knex, palette))
-      })
-      return Promise.all(palettePromises)
-    })
-    .catch(error => console.log(`Seeding error: ${error}`))
-};
+  };
 
 const createProject = (knex, project) => {
   return knex('projects').insert({
     name: project.name
   }, 'id')
+    .then((projectId) => {
+      let palettePromises = [];
+      project.palettes.forEach(palette => {
+        const { name, color1, color2, color3, color4, color5 } = palette;
+        palettePromises.push(createPalette(knex, {
+          project_id: projectId[0], name, color1, color2, color3, color4, color5
+        }))
+      })
+      return Promise.all(palettePromises)
+    })
+    .catch(error => console.log(`Seeding error: ${error}`))
 };
 
 const createPalette = (knex, palette) => {

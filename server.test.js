@@ -7,10 +7,13 @@ import projects from './db/data/example-projects';
 import palettes from './db/data/example-palettes';
 
 describe('Server', () => {
+  beforeEach(async () => {
+    await database.seed.run()
+  })
   describe('Init', () => {
     it('Should return a status of 200', async () => {
-      const res = await request(app).get('/');
-      expect(res.status).toEqual(200);
+      const response = await request(app).get('/');
+      expect(response.status).toEqual(200);
     });
   });
   describe('GET /api/v1/projects', () => {
@@ -29,11 +32,26 @@ describe('Server', () => {
       const result = response.body.palettes;
       expect(result.length).toEqual(numExpectedPalettes);
     });
-    it.skip('Should return all palettes in the database for a project that match the hexcode query', async () => {
+    it('Should return all palettes in the database for a project that match the hexcode query', async () => {
+      const matchingPalettes = await database('palettes').where('color1', 'a12345');
+      const numExpectedPalettesByHex = matchingPalettes.length;
+      const response = await request(app).get('/api/v1/projects/1/palettes?hex=a12345');
+      const result = response.body.palettes;
+      expect(result.length).toEqual(numExpectedPalettesByHex);
     });
-    it.skip('Should return an error if the project does not exist', async () => {
+    it('Should return an error if the hexcode query does not match any palettes', async () => {
+      const hexcodeQuery = 'z0z19z';
+      const expectedError = `No palettes found for hex code with the value of ${hexcodeQuery}.`;
+      const response = await request(app).get(`/api/v1/projects/1/palettes?hex=${hexcodeQuery}`);
+      const result = response.body.error;
+      expect(expectedError).toEqual(result);
     });
-    it.skip('Should return an error if the hexcode query does not match any palettes', async () => {
+    it('Should return an error if the project does not exist', async () => {
+      const projectId = 8;
+      const expectedError = `No palettes found for project with the id of ${projectId}.`;
+      const response = await request(app).get(`/api/v1/projects/${projectId}/palettes`);
+      const result = response.body.error;
+      expect(expectedError).toEqual(result);
     });
   });
   describe('GET /api/v1/projects/:id', () => {
