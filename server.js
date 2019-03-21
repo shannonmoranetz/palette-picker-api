@@ -135,8 +135,28 @@ app.put('/api/v1/palettes/:id', (req, res) => {
 
 // DELETE:
 // One project
+app.delete('/api/v1/projects/:id', (req, res) => {
+  try {
+    database('projects').where('id', parseInt(req.params.id)).select().delete()
+      .then(projectIds => {
+        res.status(202).json({ id: projectIds[0]} )
+      })
+  } catch (error) {
+    res.status(500).json({ error })
+  }
+})
 
 // One palette
+app.delete('/api/v1/palettes/:id', (req, res) => {
+  try {
+    database('palettes').where('id', parseInt(req.params.id)).select().delete()
+      .then(palettesIds => {
+        res.status(202).json({ id: palettesIds[0]} )
+      })
+  } catch (error) {
+    res.status(500).json({ error })
+  }
+})
 
 app.listen(app.get('port'), () => {
   console.log(`Server running on port: ${app.get('port')}`);
