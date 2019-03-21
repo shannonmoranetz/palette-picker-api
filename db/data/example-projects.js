@@ -16,21 +16,18 @@ module.exports = [
             "color3": "f34ss5",
             "color4": "54slk4",
             "color5": "21s342"
-        }
-        ]
+        }]
     },
     {
         "name": "Cool colors project",
-        "palettes": [
-            {
-                "name": "Fall colors",
-                "color1": "ssfs45",
-                "color2": "pso134",
-                "color3": "4ssds5",
-                "color4": "s66lk4",
-                "color5": "s34662"
-            }
-        ]
+        "palettes": [{
+            "name": "Fall colors",
+            "color1": "ssfs45",
+            "color2": "pso134",
+            "color3": "4ssds5",
+            "color4": "s66lk4",
+            "color5": "s34662"
+        }]
     },
     {
         "name": "Neutral colors project",

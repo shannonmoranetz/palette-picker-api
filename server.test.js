@@ -4,12 +4,11 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 import projects from './db/data/example-projects';
-import palettes from './db/data/example-palettes';
 
 describe('Server', () => {
   beforeEach(async () => {
     await database.seed.run()
-  })
+  });
   describe('Init', () => {
     it('Should return a status of 200', async () => {
       const response = await request(app).get('/');
@@ -26,19 +25,27 @@ describe('Server', () => {
   });
   describe('GET /api/v1/projects/:id/palettes', () => {
     it('Should return all palettes in the database for a single project', async () => {
-      const matchingPalettes = await database('palettes').where('project_id', 1);
-      const numExpectedPalettes = matchingPalettes.length;
-      const response = await request(app).get('/api/v1/projects/1/palettes');
+      const firstProject = await database('projects').first();
+      const projectId = firstProject.id;
+      const numExpectedPalettes = projects.find((project) => {
+        return project.name === firstProject.name
+      }).palettes.length;
+      const response = await request(app).get(`/api/v1/projects/${projectId}/palettes`);
       const result = response.body.palettes;
       expect(result.length).toEqual(numExpectedPalettes);
     });
-    it('Should return all palettes in the database for a project that match the hexcode query', async () => {
-      const matchingPalettes = await database('palettes').where('color1', 'a12345');
-      const numExpectedPalettesByHex = matchingPalettes.length;
-      const response = await request(app).get('/api/v1/projects/1/palettes?hex=a12345');
+
+
+    it('Should return all palettes in the database for a project that matches the hexcode query', async () => {
+      const matchingPalette = await database('palettes').where('color1', 'a12345');
+      const firstProject = await database('projects').first();
+      const projectId = firstProject.id;
+      const numExpectedPalettesByHex = matchingPalette.length;
+      const response = await request(app).get(`/api/v1/projects/${projectId}/palettes?hex=a12345`);
       const result = response.body.palettes;
       expect(result.length).toEqual(numExpectedPalettesByHex);
     });
+
     it('Should return an error if the hexcode query does not match any palettes', async () => {
       const hexcodeQuery = 'z0z19z';
       const expectedError = `No palettes found for hex code with the value of ${hexcodeQuery}.`;
