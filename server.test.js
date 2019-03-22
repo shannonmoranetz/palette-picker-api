@@ -6,9 +6,11 @@ const database = require('knex')(configuration);
 import projects from './db/data/example-projects';
 
 describe('Server', () => {
+
   beforeEach(async () => {
     await database.seed.run()
   });
+
   describe('Init', () => {
     it('Should return a status of 200', async () => {
       const response = await request(app).get('/');

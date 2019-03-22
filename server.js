@@ -1,7 +1,12 @@
 import '@babel/polyfill';
 import express from 'express';
 const environment = process.env.NODE_ENV || 'development';
-const configuration = require('./knexfile')[environment];
+let configuration;
+if (environment === 'test') {
+  configuration = require('./knexfile')[environment];
+} else {
+  configuration = require('../knexfile')[environment];
+}
 const database = require('knex')(configuration);
 const app = express();
 app.use(express.json());
