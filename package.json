@@ -9,7 +9,9 @@
     "clean": "rm -rf build && mkdir build",
     "build-babel": "babel -d ./build server.js -s",
     "build": "npm run clean && npm run build-babel",
-    "start": "npm run build && node ./build/server.js"
+    "start": "npm run build && node ./build/server.js",
+    "migrate:test": "knex migrate:latest --env=test",
+    "seed:test": "knex seed:run --env=test"
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
