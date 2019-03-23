@@ -4,11 +4,12 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "jest --watchAll",
+    "test:watch": "jest --watchAll",
+    "test": "jest --forceExit",
     "clean": "rm -rf build && mkdir build",
     "build-babel": "babel -d ./build server.js -s",
     "build": "npm run clean && npm run build-babel",
-    "start": "npm run build && nodemon ./build/server.js"
+    "start": "npm run build && node ./build/server.js"
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
