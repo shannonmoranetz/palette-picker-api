@@ -151,6 +151,16 @@ describe('Server', () => {
         const result = response.body.error;
         expect(expectedError).toEqual(result);
       });
+
+      it('Should return an error with a PUT to non-existent ID', async () => {
+        const projectId = 0;
+        const updatesToMake = { name: 'newProject' };
+        const expectedError = `No project found with the id of ${projectId}.`;
+        const response = await request(app).put(`/api/v1/projects/${projectId}`).send(updatesToMake);
+        const result = response.body.error;
+        expect(expectedError).toEqual(result);
+      });
+
     });
   
     describe('PUT /api/v1/palettes/:id', () => {
@@ -168,6 +178,16 @@ describe('Server', () => {
         const paletteId = 0;
         const updatesToMake = { color1: 'zzzzzz' };
         const expectedError = `No palette found with the id of ${paletteId}.`;
+        const response = await request(app).put(`/api/v1/palettes/${paletteId}`).send(updatesToMake);
+        const result = response.body.error;
+        expect(expectedError).toEqual(result);
+      });
+
+      it('Should return an error if a palette does not have any data to update', async () => {
+        const paletteToUpdate = await database('palettes').first();
+        const paletteId = paletteToUpdate.id;
+        const updatesToMake = {};
+        const expectedError = `Expected format: { project_id: <Integer>, name: <String>, color1: <String>, color2: <String>, color3: <String>, color4: <String>, color5: <String> }`;
         const response = await request(app).put(`/api/v1/palettes/${paletteId}`).send(updatesToMake);
         const result = response.body.error;
         expect(expectedError).toEqual(result);

@@ -93,10 +93,8 @@ app.post('/api/v1/projects', async (req, res) => {
   try {
     const project = req.body;
     if (!project.name) return res.status(422).send({ error: `Expected format: { name: <String> }` });
-    database('projects').insert(project, 'id')
-      .then(projectIds => {
-        res.status(201).json({ id: projectIds[0] })
-      })
+    const projectId = await database('projects').insert(project, 'id')
+    res.status(201).json({ id: projectId[0] })
   } catch (error) {
     res.status(500).json({ error })
   }
@@ -111,10 +109,8 @@ app.post('/api/v1/palettes', async (req, res) => {
         error: `Expected format: { project_id: <Integer>, name: <String>, color1: <String>, color2: <String>, color3: <String>, color4: <String>, color5: <String> }` 
       })
     } 
-    database('palettes').insert(req.body, 'id')
-      .then(paletteIds => {
-        res.status(201).json({ id: paletteIds[0] })
-      })
+    const paletteId = await database('palettes').insert(req.body, 'id');
+    res.status(201).json({ id: paletteId[0] });
   } catch (error) {
     res.status(500).json({ error });
   }
@@ -122,7 +118,7 @@ app.post('/api/v1/palettes', async (req, res) => {
 
 // PUT:
 // One project
-app.put('/api/v1/projects/:id', (req, res) => {
+app.put('/api/v1/projects/:id', async (req, res) => {
   try {
     const updates = req.body;
     if (!updates.name) {
@@ -130,10 +126,13 @@ app.put('/api/v1/projects/:id', (req, res) => {
         error: `Expected format: { name: <String> }`
       });
     };
-    database('projects').where('id', parseInt(req.params.id)).select().update(updates, 'id')
-      .then(projectIds => {
-        res.status(202).json({ id: projectIds[0] })
-      });
+    const projectToUpdate = await database('projects').where('id', parseInt(req.params.id)).select()
+    if (projectToUpdate.length) {
+      const projectId = await database('projects').where('id', parseInt(req.params.id)).select().update(updates, 'id')
+      res.status(202).json({ id: projectId[0] })
+    } else {
+      res.status(404).json({ error: `No project found with the id of ${req.params.id}.` });
+    }
   } catch (error) {
     res.status(500).json({ error });
   };
@@ -144,6 +143,11 @@ app.put('/api/v1/palettes/:id', async (req, res) => {
   try {
     const updates = req.body;
     const paletteToUpdate = await database('palettes').where('id', parseInt(req.params.id)).select();
+    if (!Object.keys(updates).length) {
+      return res.status(422).send({
+        error: `Expected format: { project_id: <Integer>, name: <String>, color1: <String>, color2: <String>, color3: <String>, color4: <String>, color5: <String> }`
+      });
+    };
     if (paletteToUpdate.length) {
       const updatedPalette = await database('palettes').where('id', parseInt(req.params.id)).select().update(updates, 'id');
       res.status(202).json({ id: updatedPalette[0] })
