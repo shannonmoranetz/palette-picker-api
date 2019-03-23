@@ -60,7 +60,7 @@ app.get('/api/v1/projects/:id/palettes', async (req, res) => {
 // One project
 app.get('/api/v1/projects/:id', async (req, res) => {
   try {
-    const projectId = req.params.id
+    const projectId = req.params.id;
     const selectedProject = await database('projects').where('id', projectId);
     if (selectedProject.length) {
       res.status(200).json({ project: selectedProject });
