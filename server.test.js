@@ -159,10 +159,8 @@ describe('Server', () => {
       expect(palette.color1).toEqual(updatesToMake.color1)
     });
 
-
-    it.skip('Should return an error if a palette does not have the required values to update', async () => {
-      const paletteToUpdate = await database('palettes').first();
-      const paletteId = paletteToUpdate.id;
+    it('Should return an error with a PUT to non-existent ID', async () => {
+      const paletteId = 0;
       const updatesToMake = { color1: 'zzzzzz' };
       const expectedError = `No palette found with the id of ${paletteId}.`;
       const response = await request(app).put(`/api/v1/palettes/${paletteId}`).send(updatesToMake);
@@ -170,7 +168,4 @@ describe('Server', () => {
       expect(expectedError).toEqual(result);
     });
   });
-
-
-
 });

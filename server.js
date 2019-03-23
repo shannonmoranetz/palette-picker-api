@@ -145,10 +145,10 @@ app.put('/api/v1/palettes/:id', async (req, res) => {
     const updates = req.body;
     const paletteToUpdate = await database('palettes').where('id', parseInt(req.params.id)).select();
     if (paletteToUpdate.length) {
-      await palatteToUpdate.update(updates, 'id')
-      res.status(202).json({ id: selectedPalette.id[0] })
+      const updatedPalette = await database('palettes').where('id', parseInt(req.params.id)).select().update(updates, 'id');
+      res.status(202).json({ id: updatedPalette[0] })
     } else {
-      res.status(404).json({ error: `No palette found with the id of ${paletteId}.` })
+      res.status(404).json({ error: `No palette found with the id of ${req.params.id}.` })
     }
   } catch (error) {
     res.status(500).json({ error })
