@@ -157,24 +157,32 @@ app.put('/api/v1/palettes/:id', async (req, res) => {
 
 // DELETE:
 // One project
-app.delete('/api/v1/projects/:id', (req, res) => {
+app.delete('/api/v1/projects/:id', async (req, res) => {
   try {
-    database('projects').where('id', parseInt(req.params.id)).select().delete()
-      .then(projectIds => {
-        res.status(202).json({ id: projectIds[0]} )
-      })
+    const projectId = req.params.id
+    const projectToDelete = await database('projects').where('id', parseInt(req.params.id)).select()
+    if (projectToDelete.length) {
+      await database('projects').where('id', parseInt(req.params.id)).select().delete()
+      res.status(202).json({ id: projectToDelete[0].id} )
+    } else {
+      res.status(404).json({ error: `No project found with the id of ${projectId}.` })
+    }
   } catch (error) {
     res.status(500).json({ error })
   }
 })
 
 // One palette
-app.delete('/api/v1/palettes/:id', (req, res) => {
+app.delete('/api/v1/palettes/:id', async (req, res) => {
   try {
-    database('palettes').where('id', parseInt(req.params.id)).select().delete()
-      .then(palettesIds => {
-        res.status(202).json({ id: palettesIds[0]} )
-      })
+    const paletteId = req.params.id
+    const paletteToDelete = await database('palettes').where('id', parseInt(req.params.id)).select()
+    if (paletteToDelete.length) {
+      await database('palettes').where('id', parseInt(req.params.id)).select().delete()
+      res.status(202).json({ id: paletteToDelete[0].id } )
+    } else {
+      res.status(404).json({ error: `No palette found with the id of ${paletteId}.` })
+    }
   } catch (error) {
     res.status(500).json({ error })
   }

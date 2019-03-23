@@ -168,4 +168,24 @@ describe('Server', () => {
       expect(expectedError).toEqual(result);
     });
   });
+
+  describe('DELETE /api/v1/projects/:id', () => {
+    it('Should delete an existing project in the database', async () => {
+
+    });
+
+    it.skip('Should return an error with a DELETE to non-existent ID', async () => {
+
+    });
+  });
+
+  describe('DELETE /api/v1/palettes/:id', () => {
+    it.skip('Should delete an existing palette in the database', async () => {
+
+    });
+
+    it.skip('Should return an error with a DELETE to non-existent ID', async () => {
+
+    });
+  });
 });
