@@ -89,4 +89,88 @@ describe('Server', () => {
       expect(expectedError).toEqual(result);
     });
   });
+
+  describe('POST /api/v1/projects', () => {
+    it('Should post a new project to the database', async () => {
+      const newProject = { name: 'newMockName' };
+      const response = await request(app).post('/api/v1/projects').send(newProject);
+      const results = await database('projects').where('id', parseInt(response.body.id));
+      const project = results[0];
+      expect(project.name).toEqual(newProject.name);
+    });
+    it('Should return an error if a project does not have a name', async () => {
+      const newProject = {};
+      const expectedError = `Expected format: { name: <String> }`;
+      const response = await request(app).post(`/api/v1/projects`).send(newProject);
+      const result = response.body.error;
+      expect(expectedError).toEqual(result);
+    });
+  });
+  
+  describe('POST /api/v1/palettes', () => {
+    it('Should post a new palette to the database', async () => {
+      const firstPalette = await database('palettes').first();
+      const paletteId = firstPalette.project_id;
+
+      const newPalette = { project_id: paletteId, name: 'newMockName', color1: 'aaaaaa', color2: 'bbbbbb', color3: 'cccccc', color4: 'dddddd', color5: 'eeeeee' };
+      const response = await request(app).post('/api/v1/palettes').send(newPalette);
+      const results = await database('palettes').where('id', parseInt(response.body.id));
+      const palette = results[0];
+      expect(palette.name).toEqual(newPalette.name);
+    });
+    it('Should return an error if a palette does not have the required values', async () => {
+      const newPalette = {};
+      const expectedError = `Expected format: { project_id: <Integer>, name: <String>, color1: <String>, color2: <String>, color3: <String>, color4: <String>, color5: <String> }`;
+      const response = await request(app).post(`/api/v1/palettes`).send(newPalette);
+      const result = response.body.error;
+      expect(expectedError).toEqual(result);
+    });
+  });
+
+  describe('PUT /api/v1/projects/:id', () => {
+    it('Should update an existing project in the database', async () => {
+      const projectToUpdate = await database('projects').first();
+      const projectId = projectToUpdate.id;
+      const updatesToMake = { name: 'newChangedProject' };
+      await request(app).put(`/api/v1/projects/${projectId}`).send(updatesToMake);
+      const result = await database('projects').where('id', projectId);
+      const project = result[0];
+      expect(project.name).toEqual(updatesToMake.name)
+    });
+    it('Should return an error if a project does not have the required name to update', async () => {
+      const projectToUpdate = await database('projects').first();
+      const projectId = projectToUpdate.id;
+      const updatesToMake = {};
+      const expectedError = `Expected format: { name: <String> }`;
+      const response = await request(app).put(`/api/v1/projects/${projectId}`).send(updatesToMake);
+      const result = response.body.error;
+      expect(expectedError).toEqual(result);
+    });
+  });
+
+  describe('PUT /api/v1/palettes/:id', () => {
+    it('Should update an existing palette in the database', async () => {
+      const paletteToUpdate = await database('palettes').first();
+      const paletteId = paletteToUpdate.id;
+      const updatesToMake = { color1: 'zzzzzz' };
+      await request(app).put(`/api/v1/palettes/${paletteId}`).send(updatesToMake);
+      const result = await database('palettes').where('id', paletteId);
+      const palette = result[0];
+      expect(palette.color1).toEqual(updatesToMake.color1)
+    });
+
+
+    it.skip('Should return an error if a palette does not have the required values to update', async () => {
+      const paletteToUpdate = await database('palettes').first();
+      const paletteId = paletteToUpdate.id;
+      const updatesToMake = {};
+      const expectedError = `Expected format: { project_id: <Integer>, name: <String>, color1: <String>, color2: <String>, color3: <String>, color4: <String>, color5: <String> }`;
+      const response = await request(app).put(`/api/v1/palettes/${paletteId}`).send(updatesToMake);
+      const result = response.body.error;
+      expect(expectedError).toEqual(result);
+    });
+  });
+
+
+
 });

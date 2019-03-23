@@ -93,7 +93,6 @@ app.post('/api/v1/projects', async (req, res) => {
   try {
     const project = req.body
     if (!project.name) return res.status(422).send({ error: `Expected format: { name: <String> }` })
-
     database('projects').insert(project, 'id')
       .then(projectIds => {
         res.status(201).json({ id: projectIds[0] })
@@ -106,10 +105,13 @@ app.post('/api/v1/projects', async (req, res) => {
 // One palette
 app.post('/api/v1/palettes', async (req, res) => {
   try {
-    const palette = req.body
-    if (!palette.project_id || !palette.name || !palette.color1 || !palette.color2 || !palette.color3 || !palette.color4 || !palette.color5) return res.status(422).send({ error: `Expected format: { project_id: <Integer>, name: <String>, color1: <String>, color2: <String>, color3: <String>, color4: <String>, color5: <String> }` })
-
-    database('palettes').insert(palette, 'id')
+    const { project_id, name, color1, color2, color3, color4, color5 } = req.body
+    if (!project_id || !name || !color1 || !color2 || !color3 || !color4 || !color5) {
+      return res.status(422).send({ 
+        error: `Expected format: { project_id: <Integer>, name: <String>, color1: <String>, color2: <String>, color3: <String>, color4: <String>, color5: <String> }` 
+      })
+    } 
+    database('palettes').insert(req.body, 'id')
       .then(paletteIds => {
         res.status(201).json({ id: paletteIds[0] })
       })
@@ -123,25 +125,31 @@ app.post('/api/v1/palettes', async (req, res) => {
 app.put('/api/v1/projects/:id', (req, res) => {
   try {
     const updates = req.body;
-
+    if (!updates.name) {
+      return res.status(422).send({ 
+        error: `Expected format: { name: <String> }`
+      });
+    };
     database('projects').where('id', parseInt(req.params.id)).select().update(updates, 'id')
       .then(projectIds => {
         res.status(202).json({ id: projectIds[0] })
-      })
+      });
   } catch (error) {
     res.status(500).json({ error })
-  }
+  };
 })
 
 // One palette
-app.put('/api/v1/palettes/:id', (req, res) => {
+app.put('/api/v1/palettes/:id', async (req, res) => {
   try {
     const updates = req.body;
-
-    database('palettes').where('id', parseInt(req.params.id)).select().update(updates, 'id')
-      .then(palettesIds => {
-        res.status(202).json({ id: palettesIds[0] })
-      })
+    const paletteToUpdate = await database('palettes').where('id', parseInt(req.params.id)).select();
+    if (paletteToUpdate.length) {
+      await palatteToUpdate.update(updates, 'id')
+      res.status(202).json({ id: selectedPalette.id[0] })
+    } else {
+      res.status(404).json({ error: `No palette found with the id of ${paletteId}.` })
+    }
   } catch (error) {
     res.status(500).json({ error })
   }
