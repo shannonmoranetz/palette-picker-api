@@ -3,7 +3,7 @@
 
 ### Base URL
 ```
-GET https://palette-picker-api.herokuapp.com/api/v1/
+GET https://palette-picker-api.herokuapp.com
 ```
 
 <br/>
