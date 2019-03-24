@@ -1,6 +1,12 @@
 # Palette Picker API
 ## Documentation and Example Responses
 
+### Front-End Repository:
+https://github.com/hlhartley/palette-picker
+
+### Schema:
+![Schema](https://i.imgur.com/5KWJzbM.png)
+
 ### Base URL
 ```
 GET https://palette-picker-api.herokuapp.com
