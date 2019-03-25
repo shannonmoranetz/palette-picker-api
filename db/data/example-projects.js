@@ -31,6 +31,13 @@ module.exports = [
     },
     {
         "name": "Neutral colors project",
-        "palettes": []
+        "palettes": [{
+            "name": "Winter colors",
+            "color1": "ffffff",
+            "color2": "a0g9a0",
+            "color3": "o1ijh2",
+            "color4": "r29011",
+            "color5": "12r91j"
+        }]
     }
 ]
