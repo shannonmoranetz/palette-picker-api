@@ -198,6 +198,7 @@ describe('Server', () => {
       it('Should delete an existing project in the database', async () => {
         const projectToDelete = await database('projects').where('name', 'Neutral colors project');
         const projectId = projectToDelete[0].id;
+        await database('palettes').where('project_id', projectId).select().delete();
         await request(app).delete(`/api/v1/projects/${projectId}`);
         const deletedProject = await database('projects').where('id', projectId);
         expect(deletedProject.length).toEqual(0);

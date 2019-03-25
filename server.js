@@ -169,7 +169,7 @@ app.delete('/api/v1/projects/:id', async (req, res) => {
     const projectToDelete = await database('projects').where('id', parseInt(req.params.id)).select();
     if (projectToDelete.length) {
       await database('projects').where('id', parseInt(req.params.id)).select().delete();
-      res.status(202).json({ id: projectToDelete[0].id} );
+      res.status(202).json({ id: projectToDelete[0].id } );
     } else {
       res.status(404).json({ error: `No project found with the id of ${projectId}.` });
     }
