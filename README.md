@@ -66,9 +66,6 @@ id: 10
 
 ### Palettes
 #### GET
-```
-GET /api/v1/palettes
-```
 Search for a palette by ID:
 ```
 GET /api/v1/palettes/:id
