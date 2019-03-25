@@ -1,5 +1,6 @@
 import '@babel/polyfill';
 import express from 'express';
+const cors = require('cors');
 const environment = process.env.NODE_ENV || 'development';
 let configuration;
 if (environment === 'test') {
@@ -10,6 +11,7 @@ if (environment === 'test') {
 const database = require('knex')(configuration);
 const app = express();
 app.use(express.json());
+app.use(cors());
 app.set('port', process.env.PORT || 3001);
 
 // GET:

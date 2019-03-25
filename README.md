@@ -1,9 +1,15 @@
 # Palette Picker API
 ## Documentation and Example Responses
 
+### Front-End Repository:
+https://github.com/hlhartley/palette-picker
+
+### Schema:
+![Schema](https://i.imgur.com/5KWJzbM.png)
+
 ### Base URL
 ```
-GET https://palette-picker-api.herokuapp.com/api/v1/
+GET https://palette-picker-api.herokuapp.com
 ```
 
 <br/>
@@ -60,9 +66,6 @@ id: 10
 
 ### Palettes
 #### GET
-```
-GET /api/v1/palettes
-```
 Search for a palette by ID:
 ```
 GET /api/v1/palettes/:id
