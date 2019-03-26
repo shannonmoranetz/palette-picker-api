@@ -75,11 +75,11 @@ describe('Server', () => {
       });
   
       it('Should return all palettes in the database for a project that matches the hexcode query', async () => {
-        const matchingPalette = await database('palettes').where('color1', 'a12345');
+        const matchingPalette = await database('palettes').where('color1', 'FFFF82');
         const firstProject = await database('projects').first();
         const projectId = firstProject.id;
         const numExpectedPalettesByHex = matchingPalette.length;
-        const response = await request(app).get(`/api/v1/projects/${projectId}/palettes?hex=a12345`);
+        const response = await request(app).get(`/api/v1/projects/${projectId}/palettes?hex=FFFF82`);
         const result = response.body.palettes;
         expect(result.length).toEqual(numExpectedPalettesByHex);
       });
