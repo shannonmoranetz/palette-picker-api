@@ -1,118 +1,126 @@
-# Palette Picker API
-## Documentation and Example Responses
+# Palette Picker (paLit)
 
-### Front-End Repository:
-https://github.com/hlhartley/palette-picker
+## Generate color palettes for design projects (front-end)
 
-### Schema:
-![Schema](https://i.imgur.com/5KWJzbM.png)
+* * *
 
-### Base URL
+### Randomized hex palette generation. Inspired by the web app Coolors.
+
+![Screenshot](https://i.imgur.com/Dd5GEVZ.png)
+
+### Demo
+
+[Click to view live app demo](https://palit-picker.herokuapp.com) 
+
+### Features
+
+*   RESTful API
+*   CRUD endpoints
+*   HTTP Methods: GET, DELETE, POST & PUT
+*   Endpoints targetable by one or all items
+
+### Tech Stack
+
+*   Node & Express
+*   Knex
+*   PostgreSQL
+*   Supertest
+
+### Installation
+
+* Front-end:
 ```
-GET https://palette-picker-api.herokuapp.com
+https://github.com/shannonmoranetz/palette-picker
+```
+* Dependencies:
+```
+npm i
+```
+* Start:
+```
+npm start
+```
+* Test:
+```
+npm test
 ```
 
-<br/>
+### Documentation
 
-### Projects
-#### GET
+#### Projects ~ GET
+
+All projects:
 ```
 GET /api/v1/projects
 ```
-A specific project can also be queried by its ID:
+Query by ID:
 ```
 GET /api/v1/projects/:id
 ```
-#### POST
-Posts a new project to the projects endpoint.
+
+#### Projects ~ POST
+
 ```
 POST /api/v1/projects
 ```
-Request body requires a name to complete successful posting to the projects endpoint.
-##### Response
-An ID will be sent back upon a successful post response.
-<br/>
-###### Example response:
-```
-id: 10
-```
-#### DELETE
-Deletes an existing project by its ID.
+Request body requires a name. An ID will be sent back upon a successful post response.
+
+#### Projects ~ DELETE
+
+Delete by ID:
 ```
 DELETE /api/v1/projects/:id
 ```
-##### Response
 An ID will be sent back upon a successful deletion.
-<br/>
-###### Example response:
-```
-id: 10
-```
-#### PUT
-Updates an existing project.
+
+#### Projects ~ PUT
+
+Update by ID:
 ```
 Put /api/v1/projects/:id
 ```
-Request body must contain a name to update the project with.
-##### Response
-An ID will be sent back upon a successful update.
-<br/>
-###### Example response:
-```
-id: 10
-```
+Request body requires a name. An ID will be sent back upon a successful update.
 
-<br/>
+#### Palettes ~ GET
 
-### Palettes
-#### GET
-Search for a palette by ID:
+Query by ID:
 ```
 GET /api/v1/palettes/:id
 ```
-Specific palettes can be queried by their ID and limited to a certain project:
+Query by palettes under project ID:
 ```
 GET /api/v1/projects/:id/palettes
 ```
-A hex query may be further included in the URL to complete a search for all palettes that contain the hexcode:
+Query project palette by hexcode:
 ```
 GET /api/v1/projects/:id/palettes?hex=ffffff
 ```
-#### POST
-Post a new palette to the palettes endpoint.
+
+#### Palettes ~ POST
+
+Post to palettes endpoint:
 ```
 POST /api/v1/palettes
 ```
-Request body requires the following keys: project_id, name, color1, color2, color3, color4, color5.
-##### Response
-An ID will be sent back upon a successful post response.
-<br/>
-###### Example response:
-```
-id: 10
-```
-#### PUT
-Updates an existing palette.
+Request body requires the following keys: project_id, name, color1, color2, color3, color4, color5. An ID will be sent back upon a successful post response.
+
+#### Palettes ~ PUT
+
+Update by ID:
 ```
 Put /api/v1/palettes/:id
 ```
-Request body must have at least one of the following keys: project_id, name, color1, color2, color3, color4, color5.
-##### Response
-An ID will be sent back upon a successful update.
-<br/>
-###### Example response:
-```
-id: 10
-```
-#### DELETE
-Deletes an existing palette by its ID.
+Request body must have at least one of the following keys: project_id, name, color1, color2, color3, color4, color5. An ID will be sent back upon a successful update.
+
+#### Palettes ~ DELETE
+
+Delete by ID:
 ```
 DELETE /api/v1/palettes/:id
 ```
-##### Response
 An ID will be sent back upon a successful deletion.
-<br/>
-###### Example response:
-```
-id: 10
-```
+
+### Contributors
+
+* [Shannon Moranetz](https://github.com/shannonmoranetz)
+* [Heather Hartley](https://github.com/hlhartley)
